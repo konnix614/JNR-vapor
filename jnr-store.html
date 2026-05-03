@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JNR — Premium Vaping Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --dark: #0f0f0f;
+  --dark2: #1a1a1a;
+  --dark3: #242424;
+  --border: #2e2e2e;
+  --muted: #555;
+  --text2: #999;
+  --text: #e8e8e8;
+  --white: #f5f5f5;
+  --neon: #00f5a0;
+  --neon2: #00c8ff;
+  --neon3: #7b2fff;
+  --accent: #ff4d6d;
+  --gold: #ffd166;
+  --r: 8px;
+  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; font-weight: 700; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; border: none; }
+img { max-width: 100%; }
+input, select, textarea { font-family: inherit; }
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ---- AGE GATE ---- */
+#age-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--black);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+.age-gate-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 3rem; letter-spacing: -2px; }
+.age-gate-logo span { color: var(--neon); }
+.age-gate-box {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 460px; width: 100%;
+  text-align: center;
+}
+.age-gate-box h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+.age-gate-box p { color: var(--text2); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6; }
+.age-btns { display: flex; gap: 1rem; }
+.btn-yes {
+  flex: 1; padding: 0.9rem;
+  background: var(--neon); color: var(--black);
+  border-radius: var(--r); font-weight: 700; font-size: 1rem;
+  transition: var(--transition);
+}
+.btn-yes:hover { background: #00e090; transform: translateY(-1px); }
+.btn-no {
+  flex: 1; padding: 0.9rem;
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border); border-radius: var(--r);
+  font-size: 1rem; transition: var(--transition);
+}
+.btn-no:hover { border-color: var(--muted); color: var(--text); }
+.age-legal { font-size: 0.78rem; color: var(--muted); text-align: center; max-width: 460px; line-height: 1.5; }
+
+/* ---- LAYOUT ---- */
+#app { display: none; }
+#app.visible { display: block; }
+
+/* ---- LEGAL BANNER ---- */
+.legal-banner {
+  background: #1a1000;
+  border-bottom: 1px solid #3a2a00;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gold);
+  line-height: 1.4;
+}
+
+/* ---- HEADER ---- */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex; align-items: center; gap: 2rem;
+}
+.logo {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.6rem; letter-spacing: -1px;
+  flex-shrink: 0;
+}
+.logo span { color: var(--neon); }
+nav { display: flex; gap: 0.25rem; flex: 1; }
+.nav-link {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--r);
+  font-size: 0.9rem; color: var(--text2);
+  transition: var(--transition); cursor: pointer;
+}
+.nav-link:hover, .nav-link.active { background: var(--dark3); color: var(--white); }
+.header-actions { display: flex; gap: 0.5rem; align-items: center; margin-left: auto; }
+.icon-btn {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border-radius: var(--r);
+  color: var(--text2); font-size: 1.1rem;
+  transition: var(--transition); position: relative;
+}
+.icon-btn:hover { background: var(--dark3); color: var(--white); }
+.cart-badge {
+  position: absolute; top: 4px; right: 4px;
+  background: var(--neon); color: var(--black);
+  width: 17px; height: 17px; border-radius: 50%;
+  font-size: 0.65rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-primary {
+  padding: 0.55rem 1.2rem;
+  background: var(--neon); color: var(--black);
+  border-radius: var(--r); font-weight: 600; font-size: 0.9rem;
+  transition: var(--transition);
+}
+.btn-primary:hover { background: #00e090; transform: translateY(-1px); }
+
+/* ---- PAGES ---- */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ---- HOME ---- */
+.hero {
+  min-height: 88vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 4rem 2rem;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,245,160,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 50% at 80% 80%, rgba(123,47,255,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(0,245,160,0.1); border: 1px solid rgba(0,245,160,0.25);
+  border-radius: 100px; padding: 0.4rem 1rem;
+  font-size: 0.8rem; color: var(--neon); margin-bottom: 1.5rem;
+}
+.hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--neon); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+.hero h1 { font-size: clamp(2.8rem, 6vw, 5.5rem); line-height: 1.05; letter-spacing: -2px; margin-bottom: 1.5rem; }
+.hero h1 span { color: var(--neon); }
+.hero p { font-size: 1.1rem; color: var(--text2); max-width: 520px; line-height: 1.7; margin-bottom: 2.5rem; }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.btn-lg {
+  padding: 0.85rem 2rem; border-radius: var(--r);
+  font-weight: 600; font-size: 1rem; transition: var(--transition);
+}
+.btn-lg.primary { background: var(--neon); color: var(--black); }
+.btn-lg.primary:hover { background: #00e090; transform: translateY(-2px); }
+.btn-lg.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-lg.ghost:hover { border-color: var(--muted); background: var(--dark2); }
+
+.hero-stats {
+  display: flex; gap: 3rem; margin-top: 4rem;
+  flex-wrap: wrap; justify-content: center;
+}
+.stat { text-align: center; }
+.stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--white); }
+.stat-label { font-size: 0.82rem; color: var(--text2); margin-top: 0.2rem; }
+
+/* FEATURES */
+.section { padding: 5rem 2rem; max-width: 1280px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 3rem; }
+.section-header h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: -1px; margin-bottom: 0.5rem; }
+.section-header p { color: var(--text2); font-size: 0.95rem; }
+.tag { display: inline-block; padding: 0.3rem 0.8rem; background: rgba(0,245,160,0.1); color: var(--neon); border-radius: 100px; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.8rem; }
+
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.feature-card {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem;
+  transition: var(--transition);
+}
+.feature-card:hover { border-color: rgba(0,245,160,0.3); transform: translateY(-2px); }
+.feature-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+.feature-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+.feature-card p { font-size: 0.875rem; color: var(--text2); line-height: 1.6; }
+
+/* PRODUCTS GRID (shared) */
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+.product-card {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: var(--transition); cursor: pointer;
+}
+.product-card:hover { border-color: rgba(0,245,160,0.3); transform: translateY(-3px); }
+.product-img {
+  height: 220px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4.5rem;
+  background: var(--dark3);
+  position: relative;
+}
+.product-badge {
+  position: absolute; top: 10px; left: 10px;
+  padding: 0.3rem 0.7rem; border-radius: 100px;
+  font-size: 0.72rem; font-weight: 700;
+}
+.badge-new { background: rgba(0,245,160,0.2); color: var(--neon); border: 1px solid rgba(0,245,160,0.3); }
+.badge-hot { background: rgba(255,77,109,0.2); color: var(--accent); border: 1px solid rgba(255,77,109,0.3); }
+.badge-sale { background: rgba(255,209,102,0.2); color: var(--gold); border: 1px solid rgba(255,209,102,0.3); }
+.product-info { padding: 1.2rem; }
+.product-category { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+.product-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem; }
+.product-desc { font-size: 0.82rem; color: var(--text2); margin-bottom: 0.8rem; line-height: 1.5; }
+.product-footer { display: flex; align-items: center; justify-content: space-between; }
+.product-price { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+.product-price .old { font-size: 0.8rem; color: var(--text2); text-decoration: line-through; margin-right: 0.4rem; font-weight: 400; }
+.add-to-cart {
+  padding: 0.5rem 1rem;
+  background: rgba(0,245,160,0.1); color: var(--neon);
+  border: 1px solid rgba(0,245,160,0.2); border-radius: var(--r);
+  font-size: 0.82rem; font-weight: 600; transition: var(--transition);
+}
+.add-to-cart:hover { background: var(--neon); color: var(--black); }
+
+/* REVIEWS */
+.reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.review-card {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem;
+}
+.review-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 0.8rem; }
+.review-text { font-size: 0.9rem; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; font-style: italic; }
+.review-author { display: flex; align-items: center; gap: 0.8rem; }
+.review-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--dark3); display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; border: 1px solid var(--border);
+}
+.review-name { font-size: 0.88rem; font-weight: 500; }
+.review-date { font-size: 0.75rem; color: var(--muted); }
+
+/* ---- CATALOG PAGE ---- */
+.catalog-layout { display: flex; gap: 2rem; }
+.catalog-sidebar {
+  width: 240px; flex-shrink: 0;
+}
+.catalog-main { flex: 1; }
+.filter-section { margin-bottom: 1.5rem; }
+.filter-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 0.8rem; }
+.filter-option {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0; cursor: pointer; transition: var(--transition);
+  font-size: 0.88rem; color: var(--text2);
+}
+.filter-option:hover { color: var(--white); }
+.filter-option input[type="checkbox"] { accent-color: var(--neon); width: 14px; height: 14px; }
+.filter-option.active { color: var(--neon); }
+.catalog-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.8rem;
+}
+.catalog-count { font-size: 0.9rem; color: var(--text2); }
+.catalog-select {
+  background: var(--dark2); border: 1px solid var(--border);
+  color: var(--text); padding: 0.5rem 1rem; border-radius: var(--r);
+  font-size: 0.88rem;
+}
+
+/* ---- PRODUCT DETAIL ---- */
+.product-detail { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.product-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.product-detail-img {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 16px; height: 420px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8rem; position: relative;
+}
+.product-detail-info {}
+.product-detail-cat { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); margin-bottom: 0.5rem; }
+.product-detail-name { font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+.product-detail-price { font-size: 1.8rem; font-weight: 800; color: var(--neon); margin-bottom: 1rem; }
+.product-detail-price .old { font-size: 1rem; color: var(--text2); text-decoration: line-through; margin-left: 0.5rem; }
+.product-rating { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.88rem; color: var(--text2); }
+.product-rating .stars { color: var(--gold); }
+.product-detail-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.7; margin-bottom: 1.5rem; }
+.product-options { margin-bottom: 1.5rem; }
+.option-label { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 0.6rem; }
+.option-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chip {
+  padding: 0.4rem 0.9rem; border-radius: var(--r);
+  border: 1px solid var(--border); font-size: 0.82rem; cursor: pointer;
+  transition: var(--transition); color: var(--text2);
+}
+.chip:hover, .chip.active { border-color: var(--neon); color: var(--neon); background: rgba(0,245,160,0.07); }
+.qty-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.qty-control { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.qty-btn { width: 36px; height: 36px; background: var(--dark3); color: var(--text); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+.qty-btn:hover { background: var(--dark2); color: var(--neon); }
+.qty-val { width: 44px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; background: var(--dark2); font-size: 0.9rem; }
+.stock-info { font-size: 0.82rem; }
+.stock-ok { color: var(--neon); }
+.stock-low { color: var(--gold); }
+.btn-add-detail {
+  width: 100%; padding: 0.9rem;
+  background: var(--neon); color: var(--black);
+  border-radius: var(--r); font-weight: 700; font-size: 1rem;
+  transition: var(--transition);
+}
+.btn-add-detail:hover { background: #00e090; transform: translateY(-1px); }
+.product-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+.product-tag { padding: 0.3rem 0.7rem; background: var(--dark3); border-radius: 100px; font-size: 0.75rem; color: var(--text2); }
+
+/* ---- CART ---- */
+.cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; }
+.cart-items { }
+.cart-item {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem; margin-bottom: 0.8rem;
+  transition: var(--transition);
+}
+.cart-item-img { font-size: 2.5rem; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; background: var(--dark3); border-radius: var(--r); flex-shrink: 0; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.cart-item-variant { font-size: 0.8rem; color: var(--text2); }
+.cart-item-price { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+.cart-qty { display: flex; align-items: center; gap: 0.5rem; }
+.cart-qty-btn { width: 28px; height: 28px; background: var(--dark3); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text); font-size: 1rem; transition: var(--transition); }
+.cart-qty-btn:hover { border-color: var(--neon); color: var(--neon); }
+.cart-qty-num { min-width: 24px; text-align: center; font-size: 0.9rem; font-weight: 600; }
+.cart-remove { color: var(--muted); font-size: 1.1rem; padding: 0.4rem; border-radius: 6px; transition: var(--transition); background: transparent; }
+.cart-remove:hover { color: var(--accent); background: rgba(255,77,109,0.1); }
+.cart-summary {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem; height: fit-content;
+  position: sticky; top: 80px;
+}
+.cart-summary h3 { font-size: 1rem; margin-bottom: 1.2rem; }
+.summary-line { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text2); margin-bottom: 0.8rem; }
+.summary-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; color: var(--white); border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 0.5rem; }
+.promo-row { display: flex; gap: 0.5rem; margin: 1rem 0; }
+.promo-input {
+  flex: 1; background: var(--dark3); border: 1px solid var(--border);
+  color: var(--text); padding: 0.6rem 0.8rem; border-radius: var(--r);
+  font-size: 0.85rem; transition: var(--transition);
+}
+.promo-input:focus { outline: none; border-color: var(--neon); }
+.promo-btn {
+  padding: 0.6rem 1rem; background: var(--dark3); border: 1px solid var(--border);
+  color: var(--text2); border-radius: var(--r); font-size: 0.82rem; transition: var(--transition);
+}
+.promo-btn:hover { border-color: var(--neon); color: var(--neon); }
+.btn-checkout {
+  width: 100%; padding: 0.9rem;
+  background: var(--neon); color: var(--black);
+  border-radius: var(--r); font-weight: 700; font-size: 1rem;
+  transition: var(--transition); margin-top: 1rem;
+}
+.btn-checkout:hover { background: #00e090; }
+.cart-empty { text-align: center; padding: 4rem 2rem; }
+.cart-empty-icon { font-size: 4rem; margin-bottom: 1rem; }
+.cart-empty h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+.cart-empty p { color: var(--text2); font-size: 0.9rem; }
+.promo-ok { font-size: 0.8rem; color: var(--neon); margin-top: 0.3rem; }
+.promo-err { font-size: 0.8rem; color: var(--accent); margin-top: 0.3rem; }
+
+/* ---- AUTH ---- */
+.auth-wrap {
+  min-height: calc(100vh - 130px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.auth-box {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 420px;
+}
+.auth-tabs { display: flex; gap: 0; margin-bottom: 2rem; background: var(--dark3); border-radius: var(--r); padding: 3px; }
+.auth-tab {
+  flex: 1; padding: 0.6rem; text-align: center; border-radius: 6px;
+  font-size: 0.88rem; color: var(--text2); cursor: pointer; transition: var(--transition);
+}
+.auth-tab.active { background: var(--dark2); color: var(--white); font-weight: 600; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label { display: block; font-size: 0.82rem; color: var(--text2); margin-bottom: 0.5rem; }
+.form-input {
+  width: 100%; background: var(--dark3); border: 1px solid var(--border);
+  color: var(--text); padding: 0.75rem 1rem; border-radius: var(--r);
+  font-size: 0.9rem; transition: var(--transition);
+}
+.form-input:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,245,160,0.08); }
+.form-input::placeholder { color: var(--muted); }
+.btn-full {
+  width: 100%; padding: 0.85rem;
+  background: var(--neon); color: var(--black);
+  border-radius: var(--r); font-weight: 700; font-size: 0.95rem;
+  transition: var(--transition);
+}
+.btn-full:hover { background: #00e090; }
+.auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; color: var(--muted); font-size: 0.8rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+
+/* ---- CHECKOUT ---- */
+.checkout-grid { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; }
+.checkout-section {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+}
+.checkout-section h3 { font-size: 0.95rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
+.checkout-section h3 .step { width: 24px; height: 24px; background: rgba(0,245,160,0.15); border: 1px solid rgba(0,245,160,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--neon); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.checkout-order {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem; height: fit-content;
+  position: sticky; top: 80px;
+}
+.checkout-order h3 { font-size: 0.95rem; margin-bottom: 1.2rem; }
+.co-item { display: flex; gap: 0.8rem; margin-bottom: 1rem; align-items: center; }
+.co-item-img { font-size: 1.5rem; width: 44px; height: 44px; background: var(--dark3); border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.co-item-info { flex: 1; }
+.co-item-name { font-size: 0.85rem; font-weight: 500; }
+.co-item-qty { font-size: 0.78rem; color: var(--text2); }
+.co-item-price { font-size: 0.9rem; font-weight: 700; }
+.stripe-box {
+  background: var(--dark3); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1rem; margin-top: 1rem;
+}
+.stripe-notice { font-size: 0.78rem; color: var(--text2); margin-top: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+.stripe-notice span { color: var(--neon); font-size: 0.8rem; }
+.card-row { display: flex; gap: 0.8rem; }
+.stripe-input {
+  width: 100%; background: var(--dark2); border: 1px solid var(--border);
+  color: var(--text); padding: 0.7rem 0.9rem; border-radius: var(--r);
+  font-size: 0.88rem; transition: var(--transition);
+}
+.stripe-input:focus { outline: none; border-color: var(--neon); }
+.stripe-input::placeholder { color: var(--muted); }
+.payment-icons { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+.payment-icon { padding: 0.3rem 0.6rem; background: var(--dark2); border: 1px solid var(--border); border-radius: 4px; font-size: 0.72rem; color: var(--text2); }
+
+/* ---- CONFIRMATION ---- */
+.confirm-page { text-align: center; padding: 4rem 2rem; }
+.confirm-icon { font-size: 4rem; margin-bottom: 1rem; }
+.confirm-badge {
+  display: inline-block; padding: 0.4rem 1.2rem;
+  background: rgba(0,245,160,0.1); border: 1px solid rgba(0,245,160,0.3);
+  border-radius: 100px; color: var(--neon); font-size: 0.82rem; font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+.confirm-page h2 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+.confirm-page p { color: var(--text2); margin-bottom: 2rem; font-size: 0.95rem; }
+.confirm-box {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem; max-width: 480px; margin: 0 auto 2rem;
+  text-align: left;
+}
+.confirm-line { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.confirm-line:last-child { border: none; font-weight: 700; color: var(--neon); }
+
+/* ---- TOAST ---- */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 0.9rem 1.4rem;
+  display: flex; align-items: center; gap: 0.8rem;
+  transform: translateY(100px); opacity: 0;
+  transition: var(--transition); pointer-events: none;
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; pointer-events: all; }
+.toast-icon { font-size: 1.2rem; }
+.toast-msg { font-size: 0.88rem; }
+
+/* ---- MODAL ---- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 2rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--dark2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2rem; max-width: 480px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.modal-close { background: var(--dark3); border: 1px solid var(--border); border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text2); cursor: pointer; transition: var(--transition); }
+.modal-close:hover { color: var(--white); border-color: var(--muted); }
+
+/* ---- FOOTER ---- */
+footer {
+  background: var(--dark); border-top: 1px solid var(--border);
+  padding: 3rem 2rem 1.5rem; margin-top: 4rem;
+}
+.footer-inner { max-width: 1280px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+.footer-brand { }
+.footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; margin-bottom: 0.8rem; }
+.footer-logo span { color: var(--neon); }
+.footer-tagline { font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
+.footer-col h4 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 1rem; }
+.footer-link { display: block; font-size: 0.85rem; color: var(--text2); padding: 0.3rem 0; transition: var(--transition); cursor: pointer; }
+.footer-link:hover { color: var(--white); }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; gap: 0.5rem; }
+.footer-legal { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-bottom: 1.5rem; padding: 1rem; background: rgba(255,77,109,0.05); border: 1px solid rgba(255,77,109,0.1); border-radius: var(--r); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 900px) {
+  .product-detail-grid { grid-template-columns: 1fr; }
+  .cart-layout { grid-template-columns: 1fr; }
+  .checkout-grid { grid-template-columns: 1fr; }
+  .catalog-layout { flex-direction: column; }
+  .catalog-sidebar { width: 100%; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  nav { display: none; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 2.4rem; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; }
+}
+
+/* Page transitions */
+.page { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Neon glow line */
+.neon-line { height: 1px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0.4; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- AGE GATE -->
+<div id="age-gate">
+  <div class="age-gate-logo">JN<span>R</span></div>
+  <div class="age-gate-box">
+    <h2>Vérification d'âge</h2>
+    <p>Ce site présente des produits à base de nicotine réservés aux adultes. Vous devez avoir <strong>18 ans ou plus</strong> pour y accéder.</p>
+    <div class="age-btns">
+      <button class="btn-yes" onclick="enterSite()">J'ai 18 ans ou plus</button>
+      <button class="btn-no" onclick="exitSite()">Moins de 18 ans</button>
+    </div>
+  </div>
+  <p class="age-legal">⚠️ La cigarette électronique contient de la nicotine, substance créant une forte dépendance. Elle est déconseillée aux personnes non-fumeuses, aux femmes enceintes et aux personnes souffrant de maladies cardio-vasculaires.</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- Legal Banner -->
+  <div class="legal-banner">
+    ⚠️ La vente de produits contenant de la nicotine est strictement interdite aux mineurs. Ce produit contient de la nicotine, substance créant une forte dépendance.
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="logo" onclick="showPage('home')" style="cursor:pointer">JN<span>R</span></div>
+      <nav>
+        <div class="nav-link active" onclick="showPage('home')">Accueil</div>
+        <div class="nav-link" onclick="showPage('catalog')">Catalogue</div>
+        <div class="nav-link" onclick="scrollToSection('reviews-section')">Avis</div>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="showPage('auth')" title="Mon compte">👤</button>
+        <button class="icon-btn" onclick="showPage('cart')" title="Panier">
+          🛒
+          <span class="cart-badge" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-badge">Nouvelle collection 2025</div>
+      <h1>Le vaping<br>réinventé par <span>JNR</span></h1>
+      <p>Des cigarettes électroniques de haute performance, conçues pour une expérience inégalée. Technologies de pointe, saveurs premium.</p>
+      <div class="hero-cta">
+        <button class="btn-lg primary" onclick="showPage('catalog')">Découvrir la collection →</button>
+        <button class="btn-lg ghost">Voir les nouveautés</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Saveurs disponibles</div></div>
+        <div class="stat"><div class="stat-num">15K+</div><div class="stat-label">Clients satisfaits</div></div>
+        <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">Note moyenne</div></div>
+        <div class="stat"><div class="stat-num">48h</div><div class="stat-label">Livraison express</div></div>
+      </div>
+    </section>
+
+    <div class="neon-line"></div>
+
+    <!-- Features -->
+    <div class="section">
+      <div class="section-header">
+        <div class="tag">Pourquoi JNR</div>
+        <h2>L'excellence à chaque bouffée</h2>
+        <p>Nos produits sont conçus avec les meilleures technologies du marché</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Haute Performance</h3>
+          <p>Batteries longue durée et chipsets dernière génération pour une expérience optimale.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Design Premium</h3>
+          <p>Un design épuré et moderne qui s'adapte à votre style de vie.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌿</div>
+          <h3>Saveurs Authentiques</h3>
+          <p>Plus de 50 saveurs développées en laboratoire pour une satisfaction maximale.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Sécurité Certifiée</h3>
+          <p>Tous nos produits sont certifiés CE et conformes aux réglementations européennes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Livraison Rapide</h3>
+          <p>Expédition sous 24h. Livraison express partout en France et en Europe.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Support 7j/7</h3>
+          <p>Une équipe d'experts disponible pour vous conseiller et vous accompagner.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="section" style="padding-top:0">
+      <div class="section-header">
+        <div class="tag">Bestsellers</div>
+        <h2>Nos produits phares</h2>
+        <p>Les favoris de notre communauté</p>
+      </div>
+      <div id="featured-products" class="products-grid"></div>
+      <div style="text-align:center; margin-top:2rem">
+        <button class="btn-lg ghost" onclick="showPage('catalog')">Voir tout le catalogue →</button>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="section" id="reviews-section" style="padding-top:0">
+      <div class="section-header">
+        <div class="tag">Témoignages</div>
+        <h2>Ce que disent nos clients</h2>
+        <p>Plus de 15 000 clients nous font confiance</p>
+      </div>
+      <div class="reviews-grid" id="reviews-container"></div>
+    </div>
+  </div>
+
+  <!-- CATALOG PAGE -->
+  <div class="page" id="page-catalog">
+    <div style="max-width:1280px; margin:0 auto; padding:2rem">
+      <h2 style="font-size:2rem; letter-spacing:-1px; margin-bottom:0.3rem">Catalogue</h2>
+      <p style="color:var(--text2); margin-bottom:2rem">Découvrez toute la gamme JNR</p>
+
+      <div class="catalog-layout">
+        <!-- Sidebar -->
+        <aside class="catalog-sidebar">
+          <div class="filter-section">
+            <div class="filter-title">Catégories</div>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> Pods & Kits</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> E-Liquides</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> Accessoires</label>
+          </div>
+          <div class="filter-section">
+            <div class="filter-title">Prix</div>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> Moins de 20€</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> 20€ – 50€</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> Plus de 50€</label>
+          </div>
+          <div class="filter-section">
+            <div class="filter-title">Marque</div>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> JNR Original</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> JNR Pro</label>
+            <label class="filter-option"><input type="checkbox" checked onchange="filterProducts()"> JNR Lite</label>
+          </div>
+        </aside>
+
+        <!-- Products -->
+        <main class="catalog-main">
+          <div class="catalog-toolbar">
+            <span class="catalog-count" id="catalog-count"></span>
+            <select class="catalog-select" onchange="sortProducts(this.value)">
+              <option value="default">Trier par défaut</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="name">Nom A-Z</option>
+            </select>
+          </div>
+          <div id="catalog-grid" class="products-grid"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div class="page" id="page-product">
+    <div class="product-detail" id="product-detail-content"></div>
+  </div>
+
+  <!-- CART PAGE -->
+  <div class="page" id="page-cart">
+    <div style="max-width:1100px; margin:0 auto; padding:2rem">
+      <h2 style="font-size:1.8rem; margin-bottom:1.5rem">Mon Panier</h2>
+      <div id="cart-content"></div>
+    </div>
+  </div>
+
+  <!-- AUTH PAGE -->
+  <div class="page" id="page-auth">
+    <div class="auth-wrap">
+      <div class="auth-box">
+        <div class="logo" style="text-align:center; margin-bottom:1.5rem; font-size:1.8rem">JN<span style="color:var(--neon)">R</span></div>
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tab-login" onclick="switchAuth('login')">Connexion</div>
+          <div class="auth-tab" id="tab-register" onclick="switchAuth('register')">Inscription</div>
+        </div>
+        <!-- Login -->
+        <div id="form-login">
+          <div class="form-group">
+            <label class="form-label">Adresse email</label>
+            <input class="form-input" type="email" placeholder="votre@email.com" id="login-email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <input class="form-input" type="password" placeholder="••••••••" id="login-pass">
+          </div>
+          <button class="btn-full" onclick="handleLogin()">Se connecter</button>
+          <p style="text-align:center; margin-top:1rem; font-size:0.82rem; color:var(--text2)">Mot de passe oublié ? <a href="#" style="color:var(--neon)">Réinitialiser</a></p>
+        </div>
+        <!-- Register -->
+        <div id="form-register" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Prénom</label>
+              <input class="form-input" type="text" placeholder="Jean" id="reg-firstname">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom</label>
+              <input class="form-input" type="text" placeholder="Dupont" id="reg-lastname">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Adresse email</label>
+            <input class="form-input" type="email" placeholder="votre@email.com" id="reg-email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <input class="form-input" type="password" placeholder="Min. 8 caractères" id="reg-pass">
+          </div>
+          <div class="form-group">
+            <label style="display:flex; align-items:flex-start; gap:0.6rem; cursor:pointer; font-size:0.82rem; color:var(--text2)">
+              <input type="checkbox" id="reg-age" style="margin-top:2px; accent-color:var(--neon)">
+              Je certifie avoir 18 ans ou plus et accepte les <a href="#" style="color:var(--neon)">CGV</a>
+            </label>
+          </div>
+          <button class="btn-full" onclick="handleRegister()">Créer mon compte</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT PAGE -->
+  <div class="page" id="page-checkout">
+    <div style="max-width:1100px; margin:0 auto; padding:2rem">
+      <h2 style="font-size:1.8rem; margin-bottom:1.5rem">Finaliser la commande</h2>
+      <div class="checkout-grid">
+        <div>
+          <!-- Informations -->
+          <div class="checkout-section">
+            <h3><span class="step">1</span> Informations personnelles</h3>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" type="text" placeholder="Jean" id="co-firstname"></div>
+              <div class="form-group"><label class="form-label">Nom</label><input class="form-input" type="text" placeholder="Dupont" id="co-lastname"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="votre@email.com" id="co-email"></div>
+            <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" type="tel" placeholder="+33 6 00 00 00 00" id="co-phone"></div>
+          </div>
+          <!-- Livraison -->
+          <div class="checkout-section">
+            <h3><span class="step">2</span> Adresse de livraison</h3>
+            <div class="form-group"><label class="form-label">Adresse</label><input class="form-input" type="text" placeholder="12 rue de la Paix" id="co-addr"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Code postal</label><input class="form-input" type="text" placeholder="75001" id="co-zip"></div>
+              <div class="form-group"><label class="form-label">Ville</label><input class="form-input" type="text" placeholder="Paris" id="co-city"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Pays</label><select class="form-input catalog-select" style="width:100%" id="co-country"><option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option></select></div>
+          </div>
+          <!-- Paiement -->
+          <div class="checkout-section">
+            <h3><span class="step">3</span> Paiement sécurisé</h3>
+            <div class="payment-icons">
+              <div class="payment-icon">💳 Visa</div>
+              <div class="payment-icon">💳 MC</div>
+              <div class="payment-icon">💳 Amex</div>
+              <div class="payment-icon">🔒 SSL</div>
+            </div>
+            <div class="stripe-box">
+              <div class="form-group">
+                <label class="form-label">Numéro de carte</label>
+                <input class="stripe-input" type="text" placeholder="4242 4242 4242 4242" id="card-num" maxlength="19" oninput="formatCard(this)">
+              </div>
+              <div class="card-row">
+                <div class="form-group" style="flex:1">
+                  <label class="form-label">Expiration</label>
+                  <input class="stripe-input" type="text" placeholder="MM/YY" id="card-exp" maxlength="5">
+                </div>
+                <div class="form-group" style="flex:1">
+                  <label class="form-label">CVV</label>
+                  <input class="stripe-input" type="text" placeholder="123" id="card-cvv" maxlength="3">
+                </div>
+              </div>
+            </div>
+            <div class="stripe-notice"><span>🔒</span> Paiement 100% sécurisé par chiffrement SSL 256-bit (mode test Stripe)</div>
+          </div>
+          <!-- Promo at checkout -->
+          <div class="checkout-section">
+            <h3>Code promo</h3>
+            <div class="promo-row">
+              <input class="form-input promo-input" type="text" placeholder="Entrez votre code" id="co-promo">
+              <button class="promo-btn" onclick="applyPromoCheckout()">Appliquer</button>
+            </div>
+            <div id="co-promo-msg"></div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="checkout-order">
+          <h3>Récapitulatif</h3>
+          <div id="co-items"></div>
+          <div style="border-top:1px solid var(--border); margin-top:1rem; padding-top:1rem">
+            <div class="summary-line"><span>Sous-total</span><span id="co-subtotal"></span></div>
+            <div class="summary-line"><span>Livraison</span><span id="co-shipping">Gratuite</span></div>
+            <div class="summary-line" id="co-discount-row" style="display:none; color:var(--neon)"><span>Réduction</span><span id="co-discount"></span></div>
+            <div class="summary-total"><span>Total</span><span id="co-total"></span></div>
+          </div>
+          <button class="btn-checkout" onclick="processPayment()">
+            🔒 Payer maintenant
+          </button>
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-top:0.8rem">En cliquant, vous acceptez nos CGV et confirmez avoir 18 ans.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION PAGE -->
+  <div class="page" id="page-confirmation">
+    <div class="confirm-page">
+      <div class="confirm-icon">✅</div>
+      <div class="confirm-badge">Commande confirmée</div>
+      <h2>Merci pour votre commande !</h2>
+      <p>Un email de confirmation a été envoyé à votre adresse.<br>Votre commande sera expédiée sous 24h.</p>
+      <div class="confirm-box" id="confirm-details"></div>
+      <button class="btn-lg primary" onclick="showPage('home')">Retour à l'accueil</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-legal">
+        ⚠️ <strong>Avertissement légal :</strong> Les produits vendus sur ce site contiennent de la nicotine, une substance créant une forte dépendance. Ces produits sont strictement réservés aux adultes (18 ans et plus). La vente aux mineurs est interdite par la loi. Les cigarettes électroniques sont déconseillées aux femmes enceintes, aux non-fumeurs et aux personnes souffrant de maladies cardio-vasculaires. Gardez ces produits hors de portée des enfants et des animaux.
+      </div>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">JN<span>R</span></div>
+          <p class="footer-tagline">Le vaping premium accessible à tous. Des produits de qualité, des saveurs authentiques, une expérience unique.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Boutique</h4>
+          <a class="footer-link" onclick="showPage('catalog')">Catalogue</a>
+          <a class="footer-link">Nouveautés</a>
+          <a class="footer-link">Promotions</a>
+          <a class="footer-link">Bestsellers</a>
+        </div>
+        <div class="footer-col">
+          <h4>Aide</h4>
+          <a class="footer-link">FAQ</a>
+          <a class="footer-link">Livraison</a>
+          <a class="footer-link">Retours</a>
+          <a class="footer-link">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Légal</h4>
+          <a class="footer-link">CGV</a>
+          <a class="footer-link">Confidentialité</a>
+          <a class="footer-link">Mentions légales</a>
+          <a class="footer-link">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 JNR. Tous droits réservés.</span>
+        <span>Vente interdite aux mineurs · +18 uniquement</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span class="toast-msg" id="toast-msg">Produit ajouté au panier</span>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="quick-modal">
+    <div class="modal" id="quick-modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ====================== DATA ======================
+const PRODUCTS = [
+  { id: 1, name: 'JNR 16k faclon', category: 'vape', price: 8.99, oldPrice: null, emoji: '💨', badge: 'hot', brand: 'JNR', desc: 'La vape ultime avec une batterie 1500mAh, puissance ajustable de 5 à 30W. Compatible avec tous les pods JNR.', stock: 489, rating: 4.7, reviews: 312, tags: ['1500mAh', 'OLED', '30W Max', 'USB-C'], flavors: ['Arctic Menthol', 'Mango Tango', 'Blueberry Ice', 'Tobacco Classic'], nicotine: ['3mg', '6mg', '18mg'], featured: true },
+  { id: 2, name: 'JNR 18k falcon x', category: 'vape', price: 9.50, oldPrice: null, emoji: '🔮', badge: 'new', brand: 'JNR', desc: 'Cigarette électronique ultra-légère (85g), design transparent, 600 puffs garanties. Idéale pour débuter.', stock: 512, rating: 4.7, reviews: 186, tags: ['18000 Puffs', 'Ultra-léger', 'Design Cristal'], flavors: ['Strawberry', 'Watermelon', 'Cola Ice', 'Peach Tea'], nicotine: [, '3mg', '6mg', '18mg'], featured: true },
+  { id: 3, name: 'JNR 28k falcon X +', category: 'vape', price: 11.99, oldPrice: 19.99, emoji: '🧊', badge: 'sale', brand: 'JNR', desc: 'Pack de 3 e-liquides saveur menthe glacée intense. Fraîcheur garantie. Flacon 10ml avec bouchon enfant-proof.', stock: 632, rating: 4.9, reviews: 521, tags: ['10ml x3', 'Menthe intense', '50/50 VG/PG'], flavors: ['Menthol Extra', 'Cool Mint', 'Polar Ice'], nicotine: ['6mg', '12mg', '18mg'], featured: true },
+  { id: 4, name: 'JNR 42k lion king', category: 'vape', price: 9.99, oldPrice: 17.99, emoji: '🔋', badge: 'new', brand: 'JNR', desc: 'Pack de 4 pods rechargeables compatibles JNR X Pro. Résistance mesh 0.8Ω pour une vaporisation optimale.', stock: 88, rating: 4.6, reviews: 203, tags: ['0.8Ω Mesh', 'x4 pods', 'Rechargeable'], flavors: null, nicotine: null, featured: false },
+  { id: 5, name: 'JNR 55k ragegorilla', category: 'vape', price: 10.99, oldPrice: 18.99, emoji: '🌺', badge: null, brand: 'JNR', desc: 'Explosion de fruits tropicaux : mangue, papaye, fruit de la passion. Une évasion en une bouffée.', stock: 67, rating: 4.5, reviews: 145, tags: ['10ml', 'Fruits tropicaux', '70/30 VG/PG'], flavors: ['Mango', 'Papaya', 'Passion Fruit', 'Guava'], nicotine: ['3mg', '6mg', '18mg'], featured: false },
+  { id: 6, name: 'coming soon', category: 'vape', price: 1, oldPrice: null, emoji: '🔌', badge: null, brand: 'JNR', desc: 'Station de charge rapide USB-C double port. Compatible avec toute la gamme JNR. Charge en 45 min.', stock: 200, rating: 4.4, reviews: 89, tags: ['USB-C', 'Double port', 'Charge rapide'], flavors: null, nicotine: null, featured: false },
+  { id: 7, name: 'coming soon', category: 'vape', price: 1, oldPrice: 2, emoji: '✨', badge: 'sale', brand: 'JNR', desc: 'Format ultra-slim (1cm d\'épaisseur), 800 puffs, 5 saveurs disponibles. La discrétion absolue.', stock: 33, rating: 4.6, reviews: 278, tags: ['800 Puffs', '1cm slim', '5 saveurs'], flavors: ['Mint', 'Grape', 'Lychee', 'Vanilla', 'blueberry ice'], nicotine: ['2mg', '18mg'], featured: true },
+  { id: 8, name: 'coming soon', category: 'vape', price: 1, oldPrice: null, emoji: '👜', badge: 'new', brand: 'JNR', desc: 'Étui de protection en cuir végétal premium. Compatible avec toute la gamme JNR. Protection 360°.', stock: 15, rating: 4.8, reviews: 54, tags: ['Cuir végétal', 'Protection 360°', 'Universel'], flavors: null, nicotine: null, featured: false },
+];
+
+const REVIEWS = [
+  { name: 'Marie D.', avatar: '👩', stars: 5, text: 'Je suis complètement conquise ! Le JNR 16k est exactement ce qu\'il me fallait pour arrêter de fumer. La qualité est au rendez-vous et les saveurs sont incroyables.', date: 'Il y a 2 jours', verified: true },
+  { name: 'Thomas K.', avatar: '👨', stars: 5, text: 'Livraison ultra-rapide, packaging soigné, produit parfait. Le JNR 18k est parfait pour commencer. Je recommande à 100% !', date: 'Il y a 1 semaine', verified: true },
+  { name: 'Camille R.', avatar: '🙋', stars: 4, text: 'Très satisfaite de l\'Ice Blast Pack. Les 3 saveurs sont excellentes, surtout le Polar Ice. Un peu chère peut-être mais ça vaut vraiment le coup.', date: 'Il y a 2 semaines', verified: true },
+  { name: 'Alexis B.', avatar: '🧑', stars: 5, text: 'Le SAV est réactif et très professionnel. Mon colis avait été endommagé et ils m\'ont renvoyé immédiatement sans poser de questions. Bravo JNR !', date: 'Il y a 3 semaines', verified: true },
+  { name: 'Julie M.', avatar: '👩‍🦱', stars: 5, text: 'JNR Slim 800 : parfait pour le sac à main. Design élégant, batterie qui tient toute la journée, saveurs intenses. Ma nouvelle marque préférée.', date: 'Il y a 1 mois', verified: true },
+  { name: 'Pierre L.', avatar: '🧔', stars: 4, text: 'Je commande ici depuis 6 mois. La qualité est constante, les prix sont honnêtes et le site est super facile à utiliser. Les codes promo en newsletter c\'est un vrai plus !', date: 'Il y a 1 mois', verified: true },
+];
+
+const PROMO_CODES = {
+  'JNR10': { discount: 0.10, label: '10% de réduction' },
+  'WELCOME20': { discount: 0.20, label: '20% de réduction' },
+  'FIRST15': { discount: 0.15, label: '15% de réduction' },
+  'VAPE5': { discount: 0.05, label: '5% de réduction' },
+};
+
+// ====================== STATE ======================
+let cart = JSON.parse(localStorage.getItem('jnr-cart') || '[]');
+let currentUser = JSON.parse(localStorage.getItem('jnr-user') || 'null');
+let activePromo = null;
+let currentProduct = null;
+let catalogProducts = [...PRODUCTS];
+
+// ====================== AGE GATE ======================
+function enterSite() {
+  sessionStorage.setItem('jnr-age', '1');
+  document.getElementById('age-gate').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  init();
+}
+function exitSite() {
+  document.getElementById('age-gate').innerHTML = '<div style="text-align:center;padding:2rem"><div style="font-size:3rem;margin-bottom:1rem">🚫</div><h2 style="font-family:Syne,sans-serif;font-size:1.5rem;margin-bottom:0.5rem">Accès refusé</h2><p style="color:#999">Désolé, vous devez avoir 18 ans pour accéder à ce site.</p></div>';
+}
+
+// Check session
+if (sessionStorage.getItem('jnr-age')) {
+  document.getElementById('age-gate').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  init();
+}
+
+// ====================== INIT ======================
+function init() {
+  updateCartBadge();
+  renderFeaturedProducts();
+  renderReviews();
+  renderCatalog();
+  renderCheckoutItems();
+}
+
+// ====================== NAVIGATION ======================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  if (page === 'cart') renderCart();
+  if (page === 'checkout') renderCheckoutItems();
+  if (page === 'catalog') renderCatalog();
+  window.scrollTo(0, 0);
+  const navMap = { home: 0, catalog: 1 };
+  if (navMap[page] !== undefined) document.querySelectorAll('.nav-link')[navMap[page]]?.classList.add('active');
+}
+function scrollToSection(id) {
+  showPage('home');
+  setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 100);
+}
+
+// ====================== PRODUCTS ======================
+function renderFeaturedProducts() {
+  const featured = PRODUCTS.filter(p => p.featured).slice(0, 4);
+  document.getElementById('featured-products').innerHTML = featured.map(productCard).join('');
+}
+function renderCatalog() {
+  const count = catalogProducts.length;
+  document.getElementById('catalog-count').textContent = `${count} produit${count > 1 ? 's' : ''} trouvé${count > 1 ? 's' : ''}`;
+  document.getElementById('catalog-grid').innerHTML = catalogProducts.map(productCard).join('');
+}
+function filterProducts() { renderCatalog(); }
+function sortProducts(val) {
+  if (val === 'price-asc') catalogProducts.sort((a,b) => a.price - b.price);
+  else if (val === 'price-desc') catalogProducts.sort((a,b) => b.price - a.price);
+  else if (val === 'name') catalogProducts.sort((a,b) => a.name.localeCompare(b.name));
+  else catalogProducts = [...PRODUCTS];
+  renderCatalog();
+}
+function productCard(p) {
+  const badgeHtml = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge === 'new' ? 'Nouveau' : p.badge === 'hot' ? '🔥 Hot' : 'Promo'}</span>` : '';
+  const oldPrice = p.oldPrice ? `<span class="old">${p.oldPrice.toFixed(2)}€</span>` : '';
+  return `<div class="product-card" onclick="showProduct(${p.id})">
+    <div class="product-img">${p.emoji}${badgeHtml}</div>
+    <div class="product-info">
+      <div class="product-category">${p.category}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc.substring(0,80)}...</div>
+      <div class="product-footer">
+        <div class="product-price">${oldPrice}${p.price.toFixed(2)}€</div>
+        <button class="add-to-cart" onclick="event.stopPropagation(); quickAdd(${p.id})">+ Ajouter</button>
+      </div>
+    </div>
+  </div>`;
+}
+function showProduct(id) {
+  currentProduct = PRODUCTS.find(p => p.id === id);
+  if (!currentProduct) return;
+  const p = currentProduct;
+  const stars = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+  const stockClass = p.stock < 10 ? 'stock-low' : 'stock-ok';
+  const stockText = p.stock < 10 ? `⚠️ Plus que ${p.stock} en stock` : `✅ En stock (${p.stock} disponibles)`;
+  const flavorsHtml = p.flavors ? `<div class="product-options"><div class="option-label">Saveur</div><div class="option-chips">${p.flavors.map((f,i) => `<div class="chip ${i===0?'active':''}" onclick="selectChip(this, 'flavor')">${f}</div>`).join('')}</div></div>` : '';
+  const nicHtml = p.nicotine ? `<div class="product-options"><div class="option-label">Nicotine</div><div class="option-chips">${p.nicotine.map((n,i) => `<div class="chip ${i===0?'active':''}" onclick="selectChip(this, 'nicotine')">${n}</div>`).join('')}</div></div>` : '';
+  const oldPrice = p.oldPrice ? `<span class="old">${p.oldPrice.toFixed(2)}€</span>` : '';
+  document.getElementById('product-detail-content').innerHTML = `
+    <div style="margin-bottom:1rem"><span style="color:var(--text2);font-size:0.85rem;cursor:pointer" onclick="showPage('catalog')">← Retour au catalogue</span></div>
+    <div class="product-detail-grid">
+      <div>
+        <div class="product-detail-img">${p.emoji}</div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.8rem">
+          ${[p.emoji, p.emoji, p.emoji].map(e => `<div style="flex:1;height:80px;background:var(--dark3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;">${e}</div>`).join('')}
+        </div>
+      </div>
+      <div class="product-detail-info">
+        <div class="product-detail-cat">${p.brand} · ${p.category}</div>
+        <div class="product-detail-name">${p.name}</div>
+        <div class="product-rating"><span class="stars">${stars}</span> <strong>${p.rating}</strong> (${p.reviews} avis)</div>
+        <div class="product-detail-price">${p.price.toFixed(2)}€ ${oldPrice}</div>
+        <div class="product-detail-desc">${p.desc}</div>
+        ${flavorsHtml}
+        ${nicHtml}
+        <div class="qty-row">
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeDetailQty(-1)">−</button>
+            <div class="qty-val" id="detail-qty">1</div>
+            <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
+          </div>
+          <span class="${stockClass}" style="font-size:0.82rem">${stockText}</span>
+        </div>
+        <button class="btn-add-detail" onclick="addDetailToCart()">🛒 Ajouter au panier</button>
+        <div class="product-tags">${p.tags.map(t => `<span class="product-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  showPage('product');
+  window.detailQty = 1;
+}
+function selectChip(el, group) {
+  el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+function changeDetailQty(d) {
+  window.detailQty = Math.max(1, (window.detailQty || 1) + d);
+  document.getElementById('detail-qty').textContent = window.detailQty;
+}
+function addDetailToCart() {
+  if (!currentProduct) return;
+  const qty = window.detailQty || 1;
+  const flavor = document.querySelector('#product-detail-content .chip.active')?.textContent || '';
+  addToCart(currentProduct.id, qty, flavor);
+}
+function quickAdd(id) {
+  addToCart(id, 1);
+}
+
+// ====================== CART ======================
+function addToCart(id, qty = 1, variant = '') {
+  const prod = PRODUCTS.find(p => p.id === id);
+  if (!prod) return;
+  const key = id + '-' + variant;
+  const existing = cart.find(i => i.key === key);
+  if (existing) existing.qty += qty;
+  else cart.push({ key, id, qty, variant, name: prod.name, price: prod.price, emoji: prod.emoji });
+  saveCart();
+  updateCartBadge();
+  showToast('✅', `${prod.name} ajouté au panier`);
+}
+function saveCart() { localStorage.setItem('jnr-cart', JSON.stringify(cart)); }
+function updateCartBadge() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-count').textContent = total;
+}
+function renderCart() {
+  if (cart.length === 0) {
+    document.getElementById('cart-content').innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><h3>Votre panier est vide</h3><p style="margin-bottom:1.5rem">Ajoutez des produits pour commencer vos achats</p><button class="btn-lg primary" onclick="showPage('catalog')">Voir le catalogue</button></div>`;
+    return;
+  }
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const discount = activePromo ? subtotal * activePromo.discount : 0;
+  const total = subtotal - discount;
+  const shipping = total >= 40 ? 0 : 4.99;
+  const totalFinal = total + shipping;
+
+  document.getElementById('cart-content').innerHTML = `
+    <div class="cart-layout">
+      <div class="cart-items">
+        ${cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-img">${item.emoji}</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              ${item.variant ? `<div class="cart-item-variant">${item.variant}</div>` : ''}
+            </div>
+            <div class="cart-qty">
+              <button class="cart-qty-btn" onclick="updateCartQty('${item.key}', -1)">−</button>
+              <span class="cart-qty-num">${item.qty}</span>
+              <button class="cart-qty-btn" onclick="updateCartQty('${item.key}', 1)">+</button>
+            </div>
+            <div class="cart-item-price">${(item.price * item.qty).toFixed(2)}€</div>
+            <button class="cart-remove" onclick="removeFromCart('${item.key}')">✕</button>
+          </div>`).join('')}
+      </div>
+      <div class="cart-summary">
+        <h3>Récapitulatif</h3>
+        <div class="summary-line"><span>Sous-total</span><span>${subtotal.toFixed(2)}€</span></div>
+        <div class="summary-line"><span>Livraison</span><span>${shipping === 0 ? '<span style="color:var(--neon)">Gratuite</span>' : shipping.toFixed(2) + '€'}</span></div>
+        ${discount > 0 ? `<div class="summary-line" style="color:var(--neon)"><span>Réduction (${activePromo.label})</span><span>-${discount.toFixed(2)}€</span></div>` : ''}
+        <div class="promo-row">
+          <input class="promo-input" placeholder="Code promo" id="promo-input">
+          <button class="promo-btn" onclick="applyPromo()">OK</button>
+        </div>
+        <div id="promo-msg"></div>
+        ${shipping > 0 ? `<p style="font-size:0.78rem;color:var(--text2);margin-bottom:0.8rem">Livraison gratuite à partir de 40€</p>` : ''}
+        <div class="summary-total"><span>Total TTC</span><span>${totalFinal.toFixed(2)}€</span></div>
+        <button class="btn-checkout" onclick="goCheckout()">Passer commande →</button>
+        <button class="btn-lg ghost" style="width:100%;margin-top:0.5rem;padding:0.7rem" onclick="showPage('catalog')">Continuer mes achats</button>
+      </div>
+    </div>`;
+}
+function updateCartQty(key, d) {
+  const item = cart.find(i => i.key === key);
+  if (!item) return;
+  item.qty = Math.max(0, item.qty + d);
+  if (item.qty === 0) cart = cart.filter(i => i.key !== key);
+  saveCart(); updateCartBadge(); renderCart();
+}
+function removeFromCart(key) {
+  cart = cart.filter(i => i.key !== key);
+  saveCart(); updateCartBadge(); renderCart();
+  showToast('🗑️', 'Produit retiré du panier');
+}
+function applyPromo() {
+  const code = document.getElementById('promo-input')?.value.toUpperCase().trim();
+  const promo = PROMO_CODES[code];
+  const msg = document.getElementById('promo-msg');
+  if (promo) { activePromo = promo; if (msg) { msg.className = 'promo-ok'; msg.textContent = '✅ ' + promo.label + ' appliquée !'; } renderCart(); }
+  else { if (msg) { msg.className = 'promo-err'; msg.textContent = '❌ Code invalide'; } }
+}
+function applyPromoCheckout() {
+  const code = document.getElementById('co-promo')?.value.toUpperCase().trim();
+  const promo = PROMO_CODES[code];
+  const msg = document.getElementById('co-promo-msg');
+  if (promo) { activePromo = promo; if (msg) { msg.className = 'promo-ok'; msg.textContent = '✅ ' + promo.label + ' appliquée !'; } renderCheckoutItems(); }
+  else { if (msg) { msg.className = 'promo-err'; msg.textContent = '❌ Code invalide'; } }
+}
+function goCheckout() {
+  if (cart.length === 0) return;
+  showPage('checkout');
+}
+
+// ====================== CHECKOUT ======================
+function renderCheckoutItems() {
+  const container = document.getElementById('co-items');
+  if (!container) return;
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const discount = activePromo ? subtotal * activePromo.discount : 0;
+  const total = subtotal - discount;
+  const discountRow = document.getElementById('co-discount-row');
+  container.innerHTML = cart.map(item => `
+    <div class="co-item">
+      <div class="co-item-img">${item.emoji}</div>
+      <div class="co-item-info">
+        <div class="co-item-name">${item.name}</div>
+        <div class="co-item-qty">×${item.qty}</div>
+      </div>
+      <div class="co-item-price">${(item.price * item.qty).toFixed(2)}€</div>
+    </div>`).join('');
+  const sub = document.getElementById('co-subtotal');
+  const tot = document.getElementById('co-total');
+  const dis = document.getElementById('co-discount');
+  if (sub) sub.textContent = subtotal.toFixed(2) + '€';
+  if (tot) tot.textContent = total.toFixed(2) + '€';
+  if (dis && discount > 0) { dis.textContent = '-' + discount.toFixed(2) + '€'; if(discountRow) discountRow.style.display = 'flex'; }
+}
+function formatCard(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.match(/.{1,4}/g)?.join(' ') || v;
+}
+function processPayment() {
+  const firstname = document.getElementById('co-firstname')?.value;
+  const email = document.getElementById('co-email')?.value;
+  const cardNum = document.getElementById('card-num')?.value;
+  const cardExp = document.getElementById('card-exp')?.value;
+  const cardCvv = document.getElementById('card-cvv')?.value;
+  if (!firstname || !email || !cardNum || !cardExp || !cardCvv) {
+    showToast('❌', 'Veuillez remplir tous les champs'); return;
+  }
+  // Simulated Stripe test mode
+  const orderNum = 'JNR-' + Date.now().toString().slice(-6);
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const discount = activePromo ? subtotal * activePromo.discount : 0;
+  const total = (subtotal - discount).toFixed(2);
+  showPage('confirmation');
+  document.getElementById('confirm-details').innerHTML = `
+    <div class="confirm-line"><span>Numéro de commande</span><span style="color:var(--neon);font-family:monospace">${orderNum}</span></div>
+    <div class="confirm-line"><span>Email</span><span>${email}</span></div>
+    <div class="confirm-line"><span>Articles</span><span>${cart.reduce((s,i) => s + i.qty, 0)} produits</span></div>
+    <div class="confirm-line"><span>Livraison</span><span>Express 24-48h</span></div>
+    <div class="confirm-line"><span style="color:var(--neon)">Total payé</span><span>${total}€</span></div>`;
+  cart = []; saveCart(); updateCartBadge(); activePromo = null;
+}
+
+// ====================== AUTH ======================
+function switchAuth(tab) {
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+}
+function handleLogin() {
+  const email = document.getElementById('login-email')?.value;
+  const pass = document.getElementById('login-pass')?.value;
+  if (!email || !pass) { showToast('❌', 'Champs manquants'); return; }
+  currentUser = { email, name: email.split('@')[0] };
+  localStorage.setItem('jnr-user', JSON.stringify(currentUser));
+  showToast('✅', `Bonjour ${currentUser.name} !`);
+  showPage('home');
+}
+function handleRegister() {
+  const fn = document.getElementById('reg-firstname')?.value;
+  const ln = document.getElementById('reg-lastname')?.value;
+  const email = document.getElementById('reg-email')?.value;
+  const pass = document.getElementById('reg-pass')?.value;
+  const age = document.getElementById('reg-age')?.checked;
+  if (!fn || !ln || !email || !pass) { showToast('❌', 'Veuillez remplir tous les champs'); return; }
+  if (!age) { showToast('❌', 'Vous devez certifier avoir 18 ans'); return; }
+  currentUser = { email, name: fn + ' ' + ln };
+  localStorage.setItem('jnr-user', JSON.stringify(currentUser));
+  showToast('✅', `Bienvenue ${fn} ! Compte créé avec succès.`);
+  showPage('home');
+}
+
+// ====================== REVIEWS ======================
+function renderReviews() {
+  const container = document.getElementById('reviews-container');
+  if (!container) return;
+  container.innerHTML = REVIEWS.map(r => `
+    <div class="review-card">
+      <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="review-text">"${r.text}"</div>
+      <div class="review-author">
+        <div class="review-avatar">${r.avatar}</div>
+        <div>
+          <div class="review-name">${r.name} ${r.verified ? '<span style="color:var(--neon);font-size:0.72rem">✓ Achat vérifié</span>' : ''}</div>
+          <div class="review-date">${r.date}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ====================== TOAST ======================
+let toastTimer;
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
